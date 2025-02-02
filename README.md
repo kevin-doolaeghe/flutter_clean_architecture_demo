@@ -17,3 +17,5 @@
 ## References
 
 * [Wikipedia - SOLID](https://en.wikipedia.org/wiki/SOLID)
+* [Medium - Flutter Clean Architecture](https://medium.com/@semihaltin99/flutter-clean-architecture-8759ad0213dd)
+* [Purple Giraffe - Official Website](https://www.purplegiraffe.fr/)
