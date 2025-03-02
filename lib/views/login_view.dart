@@ -11,22 +11,10 @@ abstract class ILoginViewModel extends ChangeNotifier {
   void login();
 }
 
-class LoginView extends StatefulWidget {
+class LoginView extends StatelessWidget {
   final ILoginViewModel viewModel;
 
-  const LoginView({
-    super.key,
-    required this.viewModel,
-  });
-
-  @override
-  State<LoginView> createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
-  void _onLoginButtonPressed() {
-    widget.viewModel.login();
-  }
+  const LoginView(this.viewModel, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +23,16 @@ class _LoginViewState extends State<LoginView> {
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: AnimatedBuilder(
-            animation: widget.viewModel,
+            animation: viewModel,
             builder: (context, child) {
-              final emailErrorMessage = widget.viewModel.emailErrorMessage;
-              final passwordErrorMessage =
-                  widget.viewModel.passwordErrorMessage;
-              final errorMessage = widget.viewModel.errorMessage;
+              final emailErrorMessage = viewModel.emailErrorMessage;
+              final passwordErrorMessage = viewModel.passwordErrorMessage;
+              final errorMessage = viewModel.errorMessage;
 
               return Column(
                 children: [
                   TextFormField(
-                    onChanged: widget.viewModel.setEmail,
+                    onChanged: viewModel.setEmail,
                     keyboardType: TextInputType.emailAddress,
                     autofillHints: const [
                       AutofillHints.username,
@@ -55,19 +42,19 @@ class _LoginViewState extends State<LoginView> {
                         labelText: 'Email', errorText: emailErrorMessage),
                   ),
                   TextFormField(
-                    onChanged: widget.viewModel.setPassword,
+                    onChanged: viewModel.setPassword,
                     obscureText: true,
                     autofillHints: const [AutofillHints.password],
                     decoration: InputDecoration(
                         labelText: 'Password', errorText: passwordErrorMessage),
                   ),
                   const SizedBox(height: 12),
-                  if (widget.viewModel.isLoading)
+                  if (viewModel.isLoading)
                     const Center(child: CircularProgressIndicator())
                   else
                     Center(
                       child: ElevatedButton(
-                          onPressed: _onLoginButtonPressed,
+                          onPressed: viewModel.login,
                           child: const Text("Sign in")),
                     ),
                   const SizedBox(height: 8),

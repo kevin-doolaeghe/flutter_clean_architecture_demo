@@ -1,6 +1,20 @@
-import 'package:flutter_clean_architecture_demo/features/login/presentation/views/login_view.dart';
+import 'package:flutter_clean_architecture_demo/models/user.dart';
+import 'package:flutter_clean_architecture_demo/views/login_view.dart';
+
+abstract class ILoginRouter {
+  void setUser(User user);
+}
+
+abstract class ILoginUseCase {
+  Future<User?> login(String email, String password);
+}
 
 class LoginViewModel extends ILoginViewModel {
+  final ILoginUseCase _useCase;
+  final ILoginRouter _router;
+
+  LoginViewModel(this._useCase, this._router);
+
   bool _isLoading = false;
   String? _emailErrorMessage;
   String? _passwordErrorMessage;
@@ -20,11 +34,13 @@ class LoginViewModel extends ILoginViewModel {
   @override
   void setEmail(String email) {
     _email = email;
+    _emailErrorMessage = null;
   }
 
   @override
   void setPassword(String password) {
     _password = password;
+    _passwordErrorMessage = null;
   }
 
   @override
@@ -52,10 +68,13 @@ class LoginViewModel extends ILoginViewModel {
     }
 
     if (_emailErrorMessage == null && _passwordErrorMessage == null) {
-      // Simulate a network request
-      await Future.delayed(const Duration(seconds: 2));
-      _errorMessage =
-          password == 'password' ? 'Welcome $email' : 'Invalid credentials';
+      final user = await _useCase.login(email!, password!);
+      if (user != null) {
+        _router.setUser(user);
+        _errorMessage = null;
+      } else {
+        _errorMessage = 'Invalid credentials';
+      }
     }
 
     _isLoading = false;
